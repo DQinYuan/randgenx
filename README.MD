@@ -23,6 +23,10 @@ perl gentest.pl \
 
 then all sql will be writed to example.sql
 
+When use this feature, `--threads` will be forced to 1 no matter the num you set.
+
+`--queries` is the accurate num of sqls generated according `--grammar`
+
 ## Assign datetime directly in .zz file
 
 origin randgen do not support to assign datetime directly.

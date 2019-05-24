@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 # USA
+# Channel是一个进程间通信的工具
 
 package GenTest::IPC::Channel;
 
@@ -34,6 +35,7 @@ use constant CHANNEL_PIPE => 2;
 use constant CHANNEL_EOF => 3;
 use constant CHANNEL_READER => 4;
 
+# 一般不传入参数
 sub new {
     my $class = shift;
 

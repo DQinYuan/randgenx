@@ -138,6 +138,14 @@ my $config = GenTest::Properties->new(
               'valgrind'],
     help => \&help);
 
+# 当将sql写入文件时,将线程数修正为1
+my $dsnlen = scalar @{$config->dsn};
+if ($dsnlen == 1){
+	if ($config->dsn->[0] =~ m/dummy:file:/){
+		$config->threads(1);
+	}
+}
+
 my $seed = $config->seed;
 if ($seed eq 'time') {
 	$seed = time();
@@ -204,6 +212,7 @@ if (defined $config->redefine) {
 
 exit(STATUS_ENVIRONMENT_FAILURE) if not defined $grammar;
 
+# 新建用于并发控制的channel
 my $channel = GenTest::IPC::Channel->new();
 
 # 给每个dsn建立一个数据库连接
@@ -220,6 +229,7 @@ $drizzle_only = $drizzle_only && $executors[1]->type == DB_DRIZZLE if $#executor
 my $mysql_only = $executors[0]->type == DB_MYSQL;
 $mysql_only = $mysql_only && $executors[1]->type == DB_MYSQL if $#executors > 0;
 
+# 增加默认的reporter ErrorLog和Backtrace
 if (not defined $config->reporters or $#{$config->reporters} < 0) {
     $config->reporters([]);
 	if ($mysql_only || $drizzle_only) {
@@ -334,19 +344,20 @@ my %child_pids;
 my $id = 1;
 
 my $periodic_pid = fork();
-# 三类进程   
+# 三类进程   PROCESS_TYPE_PERIODIC   PROCESS_TYPE_CHILD   PROCESS_TYPE_PARENT
 if ($periodic_pid == 0) {
-	# 子进程   PROCESS_TYPE_PERIODIC   PROCESS_TYPE_CHILD   PROCESS_TYPE_PARENT
+	# 子进程   定时汇报进程
 	Time::HiRes::sleep(($config->threads + 1) / 10);
 	say("Started periodic reporting process...");
 	$process_type = PROCESS_TYPE_PERIODIC;
 	$id = 0;
 } else {
-	# 父进程
+	# 父进程   fork出threads数量的子进程并发执行sql
 	foreach my $i (1..$config->threads) {
 		my $child_pid = fork();
         $channel->writer;
 		if ($child_pid == 0) { # This is a child 
+		    # 子进程 并发执行sql
 			$process_type = PROCESS_TYPE_CHILD;
 			last;
 		} else {
@@ -375,6 +386,7 @@ if ($process_type == PROCESS_TYPE_PARENT) {
     $channel->close;
 
 	while (1) {
+		# wait()方法看起来是当一个子进程结束,就返回该子进程的id
 		my $child_pid = wait();
 		my $exit_status = $? > 0 ? ($? >> 8) : 0;
 

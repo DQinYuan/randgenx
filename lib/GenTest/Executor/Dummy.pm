@@ -84,8 +84,10 @@ sub execute {
     }
 
     if ($self->dsn() =~ m/file/){
+        # 最后一个冒号后面跟文件路径
         unless (defined $sql_data){
-            my $filepath = substr($self->dsn(), 11);
+            my @eles = split(/:/, $self->dsn());
+            my $filepath = @eles[$#eles];
             open $sql_data, ">".$filepath;
         }
         print $sql_data "$query;\n";

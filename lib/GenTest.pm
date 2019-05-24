@@ -71,7 +71,7 @@ sub new {
     my $max_arg = (scalar(@_) / 2) - 1;
 
     foreach my $i (0..$max_arg) {
-		# 在循环变量i已经指定的情况下  @_带边全部的传入参数
+		# 在循环变量i已经指定的情况下  @_代表全部的传入参数
         if (exists $args->{$_[$i * 2]}) {
 		    if (defined $obj->[$args->{$_[$i * 2]}]) {
 			    carp("Argument '$_[$i * 2]' passed twice to ".$class.'->new()');
