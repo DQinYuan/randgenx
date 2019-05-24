@@ -64,6 +64,8 @@ use GenTest::Reporter;
 use GenTest::ReporterManager;
 use GenTest::Filter::Regexp;
 
+use Filewriter;
+
 my $DEFAULT_THREADS = 10;
 my $DEFAULT_QUERIES = 1000;
 my $DEFAULT_DURATION = 3600;
@@ -102,7 +104,8 @@ my $opt_result = GetOptions($options,
                             'views',
                             'start-dirty',
                             'filter=s',
-                            'valgrind');
+                            'valgrind',
+							'targetdir=s');
 backwardCompatability($options);
 my $config = GenTest::Properties->new(
 	# 可选参数
@@ -135,7 +138,8 @@ my $config = GenTest::Properties->new(
               'views',
               'start-dirty',
               'filter',
-              'valgrind'],
+              'valgrind',
+			  'targetdir'],
     help => \&help);
 
 # 当将sql写入文件时,将线程数修正为1
@@ -145,6 +149,15 @@ if ($dsnlen == 1){
 		$config->threads(1);
 	}
 }
+
+# 当多dsn对比时,设置targetdir的默认值为当前目录
+if ($dsnlen > 1){
+	unless(defined $config->targetdir){
+		$config->targetdir(".");
+	}
+}
+
+Filewriter::set_target_dir($config->targetdir);
 
 my $seed = $config->seed;
 if ($seed eq 'time') {
@@ -193,6 +206,8 @@ if ((defined $config->gendata) &&
 		safe_exit ($gendata_result >> 8) if $gendata_result > STATUS_OK;
 	}
 }
+
+Filewriter::close_gen_data();
 
 my $test_start = time();
 my $test_end = $test_start + $config->duration;
@@ -264,7 +279,7 @@ if ($mysql_only ) {
 	}
 }
 
-# 给予默认的验证器
+# 给予默认的validator
 if (not defined $config->validators or $#{$config->validators} < 0) {
     $config->validators([]);
 	push(@{$config->validators}, 'ErrorMessageCorruption') 

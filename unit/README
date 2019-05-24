@@ -4,8 +4,10 @@ Required perl modules: Test::Unit
 
 Run like this:
 
-unit/unit.pl unit/<testcase>.pm
+perl unit/unit.pl <testcase>
+
+The file will be run is unit/<testcase>.pm
 
 or, to run all tests:
 
-unit/unit.pl unit/Suite.pm
+unit/unit.pl Suite

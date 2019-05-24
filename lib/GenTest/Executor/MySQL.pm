@@ -29,6 +29,8 @@ use GenTest::Result;
 use GenTest::Executor;
 use Time::HiRes;
 
+use Filewriter;
+
 use constant RARE_QUERY_THRESHOLD	=> 5;
 
 my %reported_errors;
@@ -487,6 +489,10 @@ sub reportError {
 
 sub execute {
 	my ($executor, $query, $silent) = @_;
+
+	if (Filewriter::is_gen_data() && Filewriter::is_need_write()){
+		Filewriter::writeAll($query);
+	}
 
     # $dbh代表一个真正的数据库连接
 	my $dbh = $executor->dbh();

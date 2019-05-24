@@ -26,6 +26,8 @@ use GenTest::Constants;
 use GenTest::Result;
 use GenTest::Validator;
 
+use Filewriter;
+
 use constant MIXER_GENERATOR	=> 0;
 use constant MIXER_EXECUTORS	=> 1;
 use constant MIXER_VALIDATORS	=> 2;
@@ -119,6 +121,7 @@ sub next {
 			}
 		}
 
+        Filewriter::writeTotal($query);
 		my @execution_results;
 		# 对每个数据源分别执行dql
 		foreach my $executor (@$executors) {

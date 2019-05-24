@@ -33,7 +33,7 @@ use constant ASCII_ALLOWED_MAX  => chr(126); # tilde
 1;
 
 sub validate {
-        my ($comparator, $executors, $results) = @_;
+    my ($comparator, $executors, $results) = @_;
 	my ($ascii_min, $ascii_max) = (ASCII_ALLOWED_MIN, ASCII_ALLOWED_MAX);
 	foreach my $result (@$results) {
 		if (

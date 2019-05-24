@@ -42,13 +42,27 @@ sub validate {
 	if ($compare_outcome == STATUS_LENGTH_MISMATCH) {
 		if ($query =~ m{^\s*select}io) {
 	        say("Query: $query failed: result length mismatch between servers (".$results->[0]->rows()." vs. ".$results->[1]->rows().")");
-			say(GenTest::Comparator::dumpDiff($results->[0], $results->[1]));
+			my $difftext = GenTest::Comparator::dumpDiff($results->[0], $results->[1]);
+			my $text0;
+			$text0 = $query."\n/*\n".$difftext."\n*/";
+			Filewriter::writeInconsis($text0);
+			say($text0);
 		} else {
-	        say("Query: $query failed: affected_rows mismatch between servers (".$results->[0]->affectedRows()." vs. ".$results->[1]->affectedRows().")");
+			my $affectedRow1 = $results->[0]->affectedRows();
+			my $affectedRow2 = $results->[1]->affectedRows();
+	        say("Query: $query failed: affected_rows mismatch between servers (".$affectedRow1." vs. ".$affectedRow2.")");
+			my $text1;
+			$text1 = $query."\n/*\n affected_rows mismatch\n $affectedRow1 vs $affectedRow2 \n*/";
+			Filewriter::writeInconsis($text1);
+			say($text1);
 		}
 	} elsif ($compare_outcome == STATUS_CONTENT_MISMATCH) {
 		say("Query: ".$results->[0]->query()." failed: result content mismatch between servers.");
-		say(GenTest::Comparator::dumpDiff($results->[0], $results->[1]));
+		my $difftext = GenTest::Comparator::dumpDiff($results->[0], $results->[1]);
+		my $text2;
+	    $text2 = $query."\n/*\n".$difftext."\n*/";
+		Filewriter::writeInconsis($text2);
+		say($text2);
 	}
 
 	#

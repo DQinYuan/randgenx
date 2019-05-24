@@ -40,9 +40,19 @@ $data = {
 }
 ```
 
-## In Multi dsn comparasion, generate a total sql file and an inconsistent sql file
+## In Multi dsn comparasion, generate a total sql file and an inconsistent sql file (completed, only support two dsn compare)
 
-total sql file:
+```shell
+perl gentest.pl \
+   --dsn1=dbi:mysql:host=127.0.0.1:port=3306:user=root:database=test:password=123456 \
+   --dsn2=dbi:mysql:host=127.0.0.1:port=4000:user=root:database=test \
+   --gendata=conf/example.zz \
+   --grammar=conf/example.yy
+```
+
+then it will generate `total.sql` and `inconsis.sql` in current directory. (You can assign directory by `--targetdir`)
+
+`total.sql` file(all sql):
 
 ```sql
 CREATE TABLE ....;
@@ -50,7 +60,7 @@ INSERT ...;
 SELECT ...;
 ```
 
-inconsistent sql file:
+`inconsis.sql` file(gen data sql, inconsistent sql and inconsistent info):
 
 ```sql
 CREATE TABLE ....;
@@ -75,12 +85,3 @@ SELECT ...;
 # ...
 */
 ```
-
-You can assign file to `--targetdir`
-
-
-
-
-
-
-
