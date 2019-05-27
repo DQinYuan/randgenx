@@ -1,0 +1,12 @@
+
+$tables = {
+    rows => [2, 5, 8]
+};
+
+$fields = {
+    types => ['date', 'time', 'year', 'datetime', 'timestamp']
+};
+
+$data = {
+    temporals => [ 'date', 'year', 'null', undef, '2019-08-23', '2018-09-10 10:29:30']
+};

@@ -2,13 +2,13 @@
 # Introduction
 ---
 
-enhanced randgen tool with extra function. It is stil developing
+enhanced randgen tool with extra function. 
 
 [randgen document](https://github.com/RQG/RQG-Documentation/wiki/RandomQueryGeneratorQuickStart)
 
 # Change Proposal
 
-## Gen sql without need to connect mysql server (Completed)
+## Gen sql without need to connect mysql server
  
 You must connect at least one mysql server to gen test in origin randgen.
 
@@ -29,18 +29,23 @@ When use this feature, `--threads` will be forced to 1 no matter the num you set
 
 ## Assign datetime directly in .zz file
 
-origin randgen do not support to assign datetime directly.
-
-In randgenx, can assign as follow in .zz
+By researshing randgen source code, I find it support it originally, as follow:
 
 ```perl
+$tables = {
+    rows => [2, 5, 8]
+};
+
+$fields = {
+    types => ['date', 'time', 'year', 'datetime', 'timestamp']
+};
+
 $data = {
-        ...
-        temporals => ['date', 'year', 'null', undef, '2017-04-22 10:03:30' ]
-}
+    temporals => [ 'date', 'year', 'null', undef, '2019-08-23', '2018-09-10 10:29:30']
+};
 ```
 
-## In Multi dsn comparasion, generate a total sql file and an inconsistent sql file (completed, only support two dsn compare)
+## In Multi dsn comparasion, generate a total sql file and an inconsistent sql file (only support in two dsn compare)
 
 ```shell
 perl gentest.pl \

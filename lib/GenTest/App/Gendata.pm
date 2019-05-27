@@ -501,7 +501,9 @@ sub run {
                     } else {
                         my (@possible_values, $value_type);
                         
+                        # 原生数据类型和$data对应关系
                         if ($field->[FIELD_TYPE] =~ m{date|time|year}sio) {
+                            # datetime timestamp类型应该也会被匹配到这里
                             $value_type = DATA_TEMPORAL;
                             $quote = 1;
                         } elsif ($field->[FIELD_TYPE] =~ m{blob|text|binary}sio) {
@@ -517,6 +519,7 @@ sub run {
                             $quote = 1;
                         }
                         
+                        # 根据数据类型找出该类型的可选随机值
                         if ($field->[FIELD_NULLABILITY] eq 'not null') {
                             # Remove NULL from the list of allowed values
                             @possible_values = grep { lc($_) ne 'null' } @{$data_perms[$value_type]};
@@ -526,12 +529,19 @@ sub run {
                         
                         croak("# Unable to generate data for field '$field->[FIELD_TYPE] $field->[FIELD_NULLABILITY]'") if $#possible_values == -1;
                         
+                        # 生成具体数据
+
+                        # 从配置的那几种类型中随机选一个
                         my $possible_value = $prng->arrayElement(\@possible_values);
+                        # 如果上一行刚好选中了数组中undef,则这里会默认采用原来的数据类型，比如datetime, timestamp
                         $possible_value = $field->[FIELD_TYPE] if not defined $possible_value;
                         
                         if ($prng->isFieldType($possible_value)) {
+                            # 以定义的field类型
+                            # 根据possible value的类型生成相应类型的随机值
                             $value = $prng->fieldType($possible_value);
                         } else {
+                            # 未定义的类型,则直接取定义值
                             $value = $possible_value;		# A simple string literal as specified
                         }
                     }

@@ -399,6 +399,7 @@ sub arrayElement {
 # Return a random value appropriate for this type of field
 #
 
+# 各类数据随机生成规则
 sub fieldType {
 	my ($rand, $field_def) = @_;
 
@@ -467,12 +468,15 @@ sub file {
 sub isFieldType {
 	my ($rand, $field_def) = @_;
 	return undef if not defined $field_def;
-
+    
+	# 删去开头的_
 	$field_def =~ s{^_}{}sio;
+	# 获取剩下字符串中的第一个单词作为field_name
 	my ($field_name) = $field_def =~ m{^([A-Za-z]*)}sio;
 
 	if (exists $name2type{$field_name}) {
 		return $name2type{$field_name};
+		# 测试在dict/目录下面能不能找到相应的字典，能找到的话则将其类型设置为FIELD_TYPE_DICT
 	} elsif ($rand->isDictionary($field_name)) {
 		$name2type{$field_name} = FIELD_TYPE_DICT;
 		return FIELD_TYPE_DICT;
@@ -487,9 +491,10 @@ sub isDictionary {
 	if ($dict_exists{$dict_name}) {
 		return 1;
 	} else {
-                my $dict_file = $ENV{RQG_HOME} ne '' ? $ENV{RQG_HOME}."/dict/$dict_name.txt" : "dict/$dict_name.txt";
+        my $dict_file = $ENV{RQG_HOME} ne '' ? $ENV{RQG_HOME}."/dict/$dict_name.txt" : "dict/$dict_name.txt";
 
-                if (-e $dict_file) {
+        # -e用于测试文件是否存在
+        if (-e $dict_file) {
 			$dict_exists{$dict_name} = 1;
 			return 1;
 		} else {
