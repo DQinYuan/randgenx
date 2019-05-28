@@ -18,5 +18,4 @@ $data = {
          'decimal',
          ],
          strings => ['null', 'letter', 'english', 'string(15)'],
-}
-dqyuan@dqyuan-ThinkPad-P52:~/language/Mysql/toturial$
+};

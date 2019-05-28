@@ -491,7 +491,7 @@ sub execute {
 	my ($executor, $query, $silent) = @_;
 
 	if (Filewriter::is_gen_data() && Filewriter::is_need_write()){
-		Filewriter::writeAll($query);
+		Filewriter::writeDDL($query);
 	}
 
     # $dbh代表一个真正的数据库连接
