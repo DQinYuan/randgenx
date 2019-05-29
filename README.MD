@@ -59,14 +59,14 @@ then it will generate `ddl.sql`, `total.sql` and `inconsis.sql` in current direc
 
 formats of the three files as follows:
 
-`test/ddl.sql` file (sql of data initialization):
+`ddl.sql` file (sql of data initialization):
 
 ```sql
 CREATE TABLE ....;
 INSERT ...;
 ```
 
-`test/total.sql` file(all random sql defined by grammar file):
+`total.sql` file(all random sql defined by grammar file):
 
 ```sql
 SELECT ...;
@@ -75,7 +75,7 @@ SELECT ...;
 SELECT ...;
 ```
 
-`test/inconsis.sql` file(inconsistent sql and inconsistent info for the 2 dsns):
+`inconsis.sql` file(inconsistent sql and inconsistent info for the 2 dsns):
 
 ```sql
 SELECT ...;
@@ -139,7 +139,7 @@ python template.py SUM 2
 It will use default template file('template/tmpl.yy' and 'template/tmpl.zz').  
 
  - 'tmpl.zz' will be dirtectly copied to 'SUM.zz'; 
- - Template variable `$operator` in 'tmpl.yy' will be replaced with `SUM( _field , _field )` 
+ - Template variable `$operator` in 'tmpl.yy' will be replaced with `SUM( _field , _field )` , then copied to `SUM.yy`
 
 It you want to test a operator can accept any number of parameters(such as `COALESCE`)， you should write as follow:
 
@@ -170,5 +170,5 @@ python template.py --gentest 1 COALESCE unbound
 
 After execution, you will see the result in 'test/COALESCE.sql'.
 
-You can alse customize template by `--tmpl` parameter.
+You can alse customize template by `--tmpl` parameter.For example, if you set `--tmpl a`, it will use `template/a.yy` and `template/a.zz` as template。
 
