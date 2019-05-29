@@ -7,7 +7,7 @@ mysql的测试工具randgen的功能增强版本。
 
 [randgen文档](https://github.com/RQG/RQG-Documentation/wiki/RandomQueryGeneratorQuickStart)
 
-原版文档中有不少乱码，进过测试可以通过两次URL解码来解除乱码。等我有空会整理一个没有乱码的randgen的文档上传到这里来。
+原版文档中有不少乱码，可以通过两次URL解码来解除乱码。等我有空会整理一个没有乱码的randgen的文档上传到这里来。
 
 
 # 改动
