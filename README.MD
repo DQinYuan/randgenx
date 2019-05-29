@@ -1,4 +1,6 @@
 
+[中文文档](https://github.com/DQinYuan/randgenx/blob/master/docs/READEME.MD)
+
 # Introduction
 ---
 
