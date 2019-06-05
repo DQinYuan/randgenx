@@ -40,11 +40,11 @@ sub is_need_write {
     return defined $total_sql_filepath;
 }
 
-sub is_gen_data(){
+sub is_gen_data() {
     return $gen_data_phase;
 }
 
-sub close_gen_data(){
+sub close_gen_data() {
     $gen_data_phase = 0;
 }
 

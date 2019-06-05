@@ -604,6 +604,7 @@ sub run {
     }
 
     $executor->currentSchema(@schema_perms[0]);
+    $executor->execute("/* follow is grammar sql */");
     return STATUS_OK;
 }
 

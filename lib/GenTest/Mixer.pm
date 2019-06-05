@@ -121,7 +121,9 @@ sub next {
 			}
 		}
 
-        Filewriter::writeTotal($query);
+		if ( scalar(@$executors) > 1 ) {
+			Filewriter::writeTotal($query);
+		}
 		my @execution_results;
 		# 对每个数据源分别执行dql
 		foreach my $executor (@$executors) {
