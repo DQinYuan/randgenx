@@ -315,8 +315,8 @@ sub run {
             $field_copy[FIELD_TYPE] .= ' (1)';
         }
         
-        $field_copy[FIELD_CHARSET] = "/*+mysql: CHARACTER SET ".$field_copy[FIELD_CHARSET]."*/" if $field_copy[FIELD_CHARSET] ne '';
-        $field_copy[FIELD_COLLATION] = "/*mysql: COLLATE ".$field_copy[FIELD_COLLATION]."*/" if $field_copy[FIELD_COLLATION] ne '';
+        $field_copy[FIELD_CHARSET] = " CHARACTER SET ".$field_copy[FIELD_CHARSET]." " if $field_copy[FIELD_CHARSET] ne '';
+        $field_copy[FIELD_COLLATION] = " COLLATE ".$field_copy[FIELD_COLLATION]." " if $field_copy[FIELD_COLLATION] ne '';
         
         my $key_len;
         
@@ -340,7 +340,7 @@ sub run {
         $fields[$field_id]->[FIELD_SQL] = "`$field_name` ". join(' ' , grep { $_ ne '' } @field_copy);
         
         if ($field_copy[FIELD_TYPE] =~ m{timestamp}sio ) {
-            $field->[FIELD_SQL] .= ' NULL DEFAULT 0';
+            $field->[FIELD_SQL] .= ' NULL DEFAULT "1970-01-01 08:00:01"';
         }
     }
 
@@ -551,7 +551,7 @@ sub run {
                         push @data, defined $value ? $value : "NULL";
                     } elsif ($quote) {
                         $value =~ s{'}{\\'}sgio;
-                        push @data, defined $value ? "'$value'" : "NULL";
+                        push @data, defined $value ? "\"$value\"" : "NULL";
                     } else {
                         push @data, defined $value ? $value : "NULL";
                     }	

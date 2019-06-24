@@ -18,7 +18,7 @@ def operator_string(op, param_num):
     if param_num.isdigit():
         return "%s( %s )" % (op, " , ".join(["_field"] * int(param_num)))
     else:
-        return "%s( _fields )" % op
+        return "%s( _field_list )" % op
 
 def read_tmplate(filepath):
     with open(filepath) as f:
